@@ -15,15 +15,14 @@ export function Controls({
 }: ControlsProps) {
   return (
     <section className="panel controls">
-      <h2>Game controls</h2>
+      <h2>Game</h2>
 
-      <div className="controls__row">
+      <div className="controls__buttons">
         <button onClick={onStart}>Start</button>
-        <button onClick={onPause}>Pause</button>
         <button onClick={onReset}>Reset</button>
       </div>
 
-      <div className="dpad" aria-label="Direction controls">
+      <div className="dpad dpad--desktop-hidden" aria-label="Direction controls">
         <button className="dpad__up" onClick={() => onDirectionChange('UP')}>
           ▲
         </button>
@@ -50,8 +49,8 @@ export function Controls({
         </button>
       </div>
 
-      <p className="hint">
-        Keyboard: Arrow keys to move, Space to start, Escape to pause.
+      <p className="controls__hint">
+        <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move
       </p>
     </section>
   );

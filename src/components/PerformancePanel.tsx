@@ -17,56 +17,58 @@ export function PerformancePanel({
 }: PerformancePanelProps) {
   return (
     <section className="panel perf-panel">
-      <h2>Performance toggles</h2>
+      <h2>Performance</h2>
 
       <div className="toggle-list">
-        <label className="toggle">
+        <label className="toggle" title="Press T">
           <input
             type="checkbox"
             checked={settings.useTopLeftMovement}
             onChange={onToggleTopLeftMovement}
           />
           <span className="toggle__slider" />
-          <span>
-            Use <strong>top/left</strong> instead of{' '}
-            <strong>transform</strong>
+          <span className="toggle__label">
+            <span className="toggle__key">T</span>
+            top/left movement
           </span>
         </label>
 
-        <label className="toggle">
+        <label className="toggle" title="Press L">
           <input
             type="checkbox"
             checked={settings.forceLayoutThrashing}
             onChange={onToggleLayoutThrashing}
           />
           <span className="toggle__slider" />
-          <span>
-            Enable <strong>forced layout thrashing</strong>
+          <span className="toggle__label">
+            <span className="toggle__key">L</span>
+            force layout thrashing
           </span>
         </label>
 
-        <label className="toggle">
+        <label className="toggle" title="Press S">
           <input
             type="checkbox"
             checked={!settings.useRequestAnimationFrame}
             onChange={onToggleScheduler}
           />
           <span className="toggle__slider" />
-          <span>
-            Use <strong>setInterval</strong> instead of{' '}
-            <strong>requestAnimationFrame</strong>
+          <span className="toggle__label">
+            <span className="toggle__key">S</span>
+            use setInterval
           </span>
         </label>
 
-        <label className="toggle toggle--secondary">
+        <label className="toggle" title="Press M">
           <input
             type="checkbox"
             checked={settings.disableMemo}
             onChange={onToggleMemo}
           />
           <span className="toggle__slider" />
-          <span>
-            Disable <strong>React.memo</strong> for board cells
+          <span className="toggle__label">
+            <span className="toggle__key">M</span>
+            disable React.memo
           </span>
         </label>
       </div>

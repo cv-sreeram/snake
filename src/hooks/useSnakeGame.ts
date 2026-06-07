@@ -111,6 +111,8 @@ export function useSnakeGame() {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
+      const key = event.key.toLowerCase();
+      
       switch (event.key) {
         case 'ArrowUp':
           event.preventDefault();
@@ -134,12 +136,49 @@ export function useSnakeGame() {
 
         case ' ':
           event.preventDefault();
-          startGame();
+          // Reset on game-over, toggle play/pause otherwise
+          setGameState((current) => {
+            if (current.status === 'game-over') {
+              const fresh = createInitialGameState();
+              directionRef.current = fresh.direction;
+              return { ...fresh, status: 'running' };
+            }
+            if (current.status === 'idle') {
+              return { ...current, status: 'running' };
+            }
+            if (current.status === 'running') {
+              return { ...current, status: 'paused' };
+            }
+            if (current.status === 'paused') {
+              return { ...current, status: 'running' };
+            }
+            return current;
+          });
           break;
 
         case 'Escape':
           event.preventDefault();
           pauseGame();
+          break;
+
+        case 't':
+          event.preventDefault();
+          toggleTopLeftMovement();
+          break;
+
+        case 'l':
+          event.preventDefault();
+          toggleLayoutThrashing();
+          break;
+
+        case 's':
+          event.preventDefault();
+          toggleScheduler();
+          break;
+
+        case 'm':
+          event.preventDefault();
+          toggleMemo();
           break;
       }
     }
@@ -149,7 +188,14 @@ export function useSnakeGame() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [changeDirection, pauseGame, startGame]);
+  }, [
+    changeDirection,
+    pauseGame,
+    toggleTopLeftMovement,
+    toggleLayoutThrashing,
+    toggleScheduler,
+    toggleMemo,
+  ]);
 
   useEffect(() => {
     if (gameState.status !== 'running') {
