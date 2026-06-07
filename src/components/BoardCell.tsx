@@ -8,9 +8,14 @@ type BoardCellProps = {
 
 function performHeavyRenderWork(row: number, col: number) {
   let result = row * 31 + col * 17;
-  for (let i = 0; i < 800; i += 1) {
+  for (let i = 0; i < 900; i += 1) {
     result += Math.sqrt(result + i * 0.618) * Math.sin(result + i * 0.377);
     result = (result % 1000) + Math.log1p(Math.abs(result));
+
+    if (i % 50 === 0) {
+      result += Math.cos(result + i * 0.523) * Math.sqrt(Math.abs(result + i));
+      result = (result % 1000) + Math.log1p(Math.abs(result));
+    }
   }
   return result;
 }
