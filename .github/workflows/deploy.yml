@@ -25,7 +25,7 @@ jobs:
       - run: npm run build
         working-directory: ./snake
         env:
-          GITHUB_REPOSITORY: cv-sreeram/cv-sreeram.github.io
+          VITE_BASE: /snake/
       
       - uses: actions/checkout@v3
         with:
