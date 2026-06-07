@@ -9,6 +9,7 @@ type GameBoardProps = {
   gameState: GameState;
   performanceSettings: PerformanceSettings;
   metrics: PerformanceMetrics;
+  recordLayoutCost?: (cost: number) => void;
 };
 
 function getMovementStyle(
@@ -30,7 +31,7 @@ function getMovementStyle(
   };
 }
 
-export function GameBoard({ gameState, performanceSettings, metrics }: GameBoardProps) {
+export function GameBoard({ gameState, performanceSettings, metrics, recordLayoutCost }: GameBoardProps) {
   const boardRef = useRef<HTMLDivElement | null>(null);
 
   const boardCells = useMemo(() => {
@@ -105,7 +106,14 @@ export function GameBoard({ gameState, performanceSettings, metrics }: GameBoard
         >
           <div className="board-grid" aria-hidden="true">
             {boardCells.map((cell) => (
-              <CellComponent key={cell.key} row={cell.row} col={cell.col} />
+              <CellComponent
+                key={cell.key}
+                row={cell.row}
+                col={cell.col}
+                onRender={performanceSettings.disableMemo
+                  ? (cost: number) => { if (recordLayoutCost) recordLayoutCost(cost); }
+                  : undefined}
+              />
             ))}
           </div>
 

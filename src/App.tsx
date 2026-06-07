@@ -10,6 +10,7 @@ export default function App() {
     gameState,
     performanceSettings,
     metrics,
+    recordLayoutCost,
     startGame,
     pauseGame,
     resetGame,
@@ -53,6 +54,7 @@ export default function App() {
             gameState={gameState}
             performanceSettings={performanceSettings}
             metrics={metrics}
+            recordLayoutCost={recordLayoutCost}
           />
 
           <p className="game-hint">

@@ -24,7 +24,7 @@ export function useSnakeGame() {
     useState<PerformanceSettings>(initialPerformanceSettings);
 
   const directionRef = useRef<Direction>('RIGHT');
-  const { metrics, recordFrame, getAndResetLayoutCost } = usePerformanceMetrics();
+  const { metrics, recordFrame, recordLayoutCost, getAndResetLayoutCost } = usePerformanceMetrics();
 
   const startGame = useCallback(() => {
     setGameState((current) => {
@@ -273,6 +273,7 @@ export function useSnakeGame() {
     gameState,
     performanceSettings,
     metrics,
+    recordLayoutCost,
     startGame,
     pauseGame,
     resetGame,
