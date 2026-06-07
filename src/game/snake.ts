@@ -9,6 +9,7 @@ export function createInitialGameState(): GameState {
     status: 'idle',
     score: 0,
     tick: 0,
+    fps: 0,
   };
 }
 
@@ -84,6 +85,7 @@ export function getNextGameState(state: GameState): GameState {
     return {
       ...state,
       status: 'game-over',
+      fps: state.fps,
     };
   }
 
@@ -103,6 +105,7 @@ export function getNextGameState(state: GameState): GameState {
     return {
       ...state,
       status: 'game-over',
+      fps: state.fps,
     };
   }
 
@@ -112,5 +115,6 @@ export function getNextGameState(state: GameState): GameState {
     food: hasEatenFood ? createRandomFood(nextSnake) : state.food,
     score: hasEatenFood ? state.score + 10 : state.score,
     tick: state.tick + 1,
+    fps: state.fps,
   };
 }

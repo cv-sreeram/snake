@@ -145,7 +145,12 @@ export function GameBoard({ gameState, performanceSettings }: GameBoardProps) {
         </div>
 
         <div className="screen__footer">
-          {gameState.status === 'idle' && 'PRESS START'}
+          {gameState.status === 'idle' && (
+            <>
+              <span className="footer-mobile">PRESS START</span>
+              <span className="footer-desktop">PRESS SPACE</span>
+            </>
+          )}
           {gameState.status === 'running' && 'RUNNING'}
           {gameState.status === 'paused' && 'PAUSED'}
           {gameState.status === 'game-over' && 'GAME OVER'}

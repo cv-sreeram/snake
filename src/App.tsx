@@ -1,6 +1,5 @@
 import { Controls } from './components/Controls';
 import { GameBoard } from './components/GameBoard';
-import { PerformanceBanner } from './components/PerformanceBanner';
 import { PerformancePanel } from './components/PerformancePanel';
 import { useSnakeGame } from './hooks/useSnakeGame';
 
@@ -29,24 +28,28 @@ export default function App() {
         </p>
       </section>
 
-      <PerformanceBanner settings={performanceSettings} />
-
       <section className="layout">
-        <div className="left-panel">
+        <div className="game-section">
           <GameBoard
             gameState={gameState}
             performanceSettings={performanceSettings}
           />
+
+          <p className="game-hint">
+            <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move
+          </p>
+
+          <div className="mobile-controls">
+            <Controls
+              onStart={startGame}
+              onPause={pauseGame}
+              onReset={resetGame}
+              onDirectionChange={changeDirection}
+            />
+          </div>
         </div>
 
         <div className="right-panel">
-          <Controls
-            onStart={startGame}
-            onPause={pauseGame}
-            onReset={resetGame}
-            onDirectionChange={changeDirection}
-          />
-
           <PerformancePanel
             settings={performanceSettings}
             onToggleTopLeftMovement={toggleTopLeftMovement}

@@ -14,6 +14,7 @@ export type GameState = {
   status: GameStatus;
   score: number;
   tick: number;
+  fps: number;
 };
 
 export type PerformanceSettings = {

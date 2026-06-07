@@ -17,36 +17,38 @@ export function Controls({
     <section className="panel controls">
       <h2>Game</h2>
 
-      <div className="controls__buttons">
-        <button onClick={onStart}>Start</button>
-        <button onClick={onReset}>Reset</button>
-      </div>
+      <div className="controls__wrapper">
+        <div className="dpad dpad--desktop-hidden" aria-label="Direction controls">
+          <button className="dpad__up" onClick={() => onDirectionChange('UP')}>
+            ▲
+          </button>
 
-      <div className="dpad dpad--desktop-hidden" aria-label="Direction controls">
-        <button className="dpad__up" onClick={() => onDirectionChange('UP')}>
-          ▲
-        </button>
+          <button
+            className="dpad__left"
+            onClick={() => onDirectionChange('LEFT')}
+          >
+            ◀
+          </button>
 
-        <button
-          className="dpad__left"
-          onClick={() => onDirectionChange('LEFT')}
-        >
-          ◀
-        </button>
+          <button
+            className="dpad__right"
+            onClick={() => onDirectionChange('RIGHT')}
+          >
+            ▶
+          </button>
 
-        <button
-          className="dpad__right"
-          onClick={() => onDirectionChange('RIGHT')}
-        >
-          ▶
-        </button>
+          <button
+            className="dpad__down"
+            onClick={() => onDirectionChange('DOWN')}
+          >
+            ▼
+          </button>
+        </div>
 
-        <button
-          className="dpad__down"
-          onClick={() => onDirectionChange('DOWN')}
-        >
-          ▼
-        </button>
+        <div className="controls__buttons">
+          <button onClick={onStart}>Start</button>
+          <button onClick={onReset}>Reset</button>
+        </div>
       </div>
 
       <p className="controls__hint">
