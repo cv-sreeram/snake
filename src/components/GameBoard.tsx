@@ -1,11 +1,14 @@
 import { useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { BOARD_SIZE, CELL_SIZE } from '../game/constants';
 import type { GameState, PerformanceSettings, Point } from '../game/types';
+import type { PerformanceMetrics } from '../hooks/usePerformanceMetrics';
 import { BoardCell, MemoBoardCell } from './BoardCell';
+import { PerformanceIndicator } from './PerformanceIndicator';
 
 type GameBoardProps = {
   gameState: GameState;
   performanceSettings: PerformanceSettings;
+  metrics: PerformanceMetrics;
 };
 
 function getMovementStyle(
@@ -27,7 +30,7 @@ function getMovementStyle(
   };
 }
 
-export function GameBoard({ gameState, performanceSettings }: GameBoardProps) {
+export function GameBoard({ gameState, performanceSettings, metrics }: GameBoardProps) {
   const boardRef = useRef<HTMLDivElement | null>(null);
 
   const boardCells = useMemo(() => {
@@ -57,18 +60,14 @@ export function GameBoard({ gameState, performanceSettings }: GameBoardProps) {
       return;
     }
 
+    // Reduced from 8 passes to 2 passes, and only query board cells (not moving parts)
+    // This still causes significant layout thrashing but won't crash the app
     const cells = Array.from(board.querySelectorAll<HTMLElement>('.board-cell'));
 
-    const movingParts = Array.from(
-      board.querySelectorAll<HTMLElement>('.snake-part, .food')
-    );
-
-    const elements = [...cells, ...movingParts];
-
-    for (let pass = 0; pass < 8; pass += 1) {
-      for (const element of elements) {
+    for (let pass = 0; pass < 2; pass += 1) {
+      for (const element of cells) {
         element.style.borderWidth = pass % 2 === 0 ? '1px' : '2px';
-        const forcedLayoutRead = element.offsetHeight;
+        const forcedLayoutRead = element.offsetHeight; // Forces layout recalculation
 
         if (forcedLayoutRead < 0) {
           element.style.opacity = '0.99';
@@ -88,7 +87,10 @@ export function GameBoard({ gameState, performanceSettings }: GameBoardProps) {
       <div className="screen">
         <div className="screen__header">
           <span>SNAKE</span>
-          <span>SCORE {gameState.score}</span>
+          <div className="screen__stats">
+            <span>SCORE {gameState.score}</span>
+            <PerformanceIndicator metrics={metrics} />
+          </div>
         </div>
 
         <div

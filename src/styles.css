@@ -176,6 +176,13 @@ h1 {
   margin-top: 0.65rem;
 }
 
+.screen__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  align-items: flex-end;
+}
+
 .footer-mobile {
   display: none;
 }

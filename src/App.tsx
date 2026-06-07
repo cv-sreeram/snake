@@ -1,12 +1,15 @@
+import { useEffect, useState } from 'react';
 import { Controls } from './components/Controls';
 import { GameBoard } from './components/GameBoard';
 import { PerformancePanel } from './components/PerformancePanel';
+import { DetailedStatsPanel } from './components/DetailedStatsPanel';
 import { useSnakeGame } from './hooks/useSnakeGame';
 
 export default function App() {
   const {
     gameState,
     performanceSettings,
+    metrics,
     startGame,
     pauseGame,
     resetGame,
@@ -16,6 +19,22 @@ export default function App() {
     toggleScheduler,
     toggleMemo,
   } = useSnakeGame();
+
+  const [isStatsPanelOpen, setIsStatsPanelOpen] = useState(false);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        setIsStatsPanelOpen((prev) => !prev);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <main className="app">
@@ -33,10 +52,11 @@ export default function App() {
           <GameBoard
             gameState={gameState}
             performanceSettings={performanceSettings}
+            metrics={metrics}
           />
 
           <p className="game-hint">
-            <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move
+            <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move • <strong>P</strong> for stats
           </p>
 
           <div className="mobile-controls">
@@ -59,6 +79,12 @@ export default function App() {
           />
         </div>
       </section>
+
+      <DetailedStatsPanel
+        metrics={metrics}
+        isOpen={isStatsPanelOpen}
+        onClose={() => setIsStatsPanelOpen(false)}
+      />
     </main>
   );
 }

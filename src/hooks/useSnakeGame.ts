@@ -6,6 +6,7 @@ import {
   isOppositeDirection,
 } from '../game/snake';
 import type { Direction, GameState, PerformanceSettings } from '../game/types';
+import { usePerformanceMetrics, type PerformanceMetrics } from './usePerformanceMetrics';
 
 const initialPerformanceSettings: PerformanceSettings = {
   useTopLeftMovement: false,
@@ -23,6 +24,7 @@ export function useSnakeGame() {
     useState<PerformanceSettings>(initialPerformanceSettings);
 
   const directionRef = useRef<Direction>('RIGHT');
+  const { metrics, recordFrame, getAndResetLayoutCost } = usePerformanceMetrics();
 
   const startGame = useCallback(() => {
     setGameState((current) => {
@@ -203,8 +205,14 @@ export function useSnakeGame() {
     }
 
     if (!performanceSettings.useRequestAnimationFrame) {
+      let lastFrameTime = performance.now();
+
       const intervalId = window.setInterval(() => {
+        const now = performance.now();
+        const layoutCost = getAndResetLayoutCost();
+        recordFrame(now, layoutCost);
         stepGame();
+        lastFrameTime = now;
       }, GAME_SPEED_MS);
 
       return () => {
@@ -215,11 +223,32 @@ export function useSnakeGame() {
     let rafId = 0;
     let lastFrameTime = performance.now();
     let accumulatedTime = 0;
+    let frameCount = 0;
+    let lastFpsTime = performance.now();
+    let currentFps = 0;
 
     function frame(now: number) {
+      frameCount += 1;
       const delta = now - lastFrameTime;
       lastFrameTime = now;
       accumulatedTime += delta;
+
+      // Record frame timing for metrics
+      const layoutCost = getAndResetLayoutCost();
+      recordFrame(now, layoutCost);
+
+      // Update FPS every 500ms
+      if (now - lastFpsTime >= 500) {
+        currentFps = Math.round((frameCount * 1000) / (now - lastFpsTime));
+        frameCount = 0;
+        lastFpsTime = now;
+
+        // Update game state with new FPS
+        setGameState((current) => ({
+          ...current,
+          fps: currentFps,
+        }));
+      }
 
       while (accumulatedTime >= GAME_SPEED_MS) {
         stepGame();
@@ -243,6 +272,7 @@ export function useSnakeGame() {
   return {
     gameState,
     performanceSettings,
+    metrics,
     startGame,
     pauseGame,
     resetGame,
