@@ -36,19 +36,8 @@ jobs:
       - run: rm -rf cv-site/snake && cp -r snake/dist cv-site/snake
       
       - run: |
-          cat > cv-site/.gitattributes << 'EOF'
-          * text=auto
-          *.js text
-          *.css text
-          *.html text
-          *.json text
-          *.svg text
-          EOF
-      
-      - run: |
           git config user.email "github-actions@github.com"
           git config user.name "GitHub Actions"
-          git add .gitattributes
           git add snake/
           git commit -m "Deploy Snake game: ${{ github.sha }}" || echo "No changes to commit"
           git push
