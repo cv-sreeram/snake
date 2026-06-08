@@ -448,11 +448,14 @@ h1 {
 
 @media (max-width: 860px) {
   .app {
-    padding: 1rem 0;
+    padding: 1rem 0 1.5rem;
+    width: min(100%, calc(100vw - 1rem));
   }
 
   .hero {
     margin-bottom: 0.75rem;
+    text-align: center;
+    padding: 0 0.5rem;
   }
 
   h1 {
@@ -461,12 +464,17 @@ h1 {
   }
 
   .hero p:last-child {
-    margin: 0.5rem 0 0;
+    margin: 0.5rem auto 0;
     font-size: 0.9rem;
+    max-width: 42rem;
+    text-align: center;
   }
 
   .layout {
     grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
   }
 
   .game-section {
@@ -477,7 +485,13 @@ h1 {
   }
 
   .board {
-    width: min(var(--board-size), calc(100vw - 5rem));
+    width: min(var(--board-size), calc(100% - 2rem));
+    max-width: 100%;
+  }
+
+  .right-panel,
+  .left-panel {
+    width: 100%;
   }
 
   .performance-banner {
@@ -543,12 +557,14 @@ h1 {
 
   .screen__header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    text-align: center;
   }
 
   .screen__stats {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .dpad--desktop-hidden {
