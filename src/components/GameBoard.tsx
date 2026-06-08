@@ -156,7 +156,12 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
 
       <div className="device__brand">NOKIA</div>
 
-      <div className="screen">
+      <div
+        className="screen"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+      >
         <div className="screen__header">
           <span>SNAKE</span>
           <div className="screen__stats">
@@ -174,9 +179,6 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
               '--cell-size': `${cellSize}px`,
             } as CSSProperties
           }
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerCancel}
         >
           <div className="board-grid" aria-hidden="true">
             {boardCells.map((cell) => (

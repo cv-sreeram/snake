@@ -122,6 +122,10 @@ h1 {
   display: none;
 }
 
+.mobile-perf-toggle {
+  display: none;
+}
+
 .device {
   width: min(100%, 430px);
   margin: 0 auto;
@@ -168,15 +172,7 @@ h1 {
     inset 0 0 0 2px rgba(45, 61, 33, 0.7),
     inset 0 0 2.2rem rgba(26, 40, 18, 0.38),
     0 0.5rem 1rem rgba(0, 0, 0, 0.35);
-}
-
-.screen__header,
-.screen__footer {
-  display: flex;
-  justify-content: space-between;
-  min-height: 1.4rem;
-  color: #172512;
-  font-family: "Courier New", monospace;
+  touch-action: none;
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -488,6 +484,7 @@ h1 {
     flex-direction: column;
     gap: 0;
     align-items: center;
+    position: relative;
   }
 
   .board {
@@ -502,6 +499,88 @@ h1 {
 
   .performance-banner {
     display: none;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .mobile-perf-toggle {
+    display: inline-flex;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 3.25rem;
+    height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    border: 1px solid rgba(23, 33, 26, 0.12);
+    background: rgba(255, 255, 255, 0.96);
+    color: #17211a;
+    box-shadow: 0 1rem 1.8rem rgba(0, 0, 0, 0.14);
+    cursor: pointer;
+    z-index: 30;
+    padding: 0;
+  }
+
+  .mobile-perf-toggle__icon {
+    display: block;
+    width: 1.25rem;
+    height: 0.12rem;
+    background: currentColor;
+    border-radius: 999px;
+    box-shadow:
+      0 0.34rem 0 currentColor,
+      0 -0.34rem 0 currentColor;
+  }
+
+  .mobile-perf-open {
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+  }
+
+  .mobile-perf-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  .mobile-perf-sheet__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 18, 10, 0.55);
+    backdrop-filter: blur(4px);
+  }
+
+  .mobile-perf-sheet__content {
+    position: relative;
+    width: min(100%, 28rem);
+    margin: 0 1rem 1rem;
+    padding-top: 1rem;
+    z-index: 1;
+  }
+
+  .mobile-perf-sheet__close {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #17211a;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 0.75rem 1rem rgba(0, 0, 0, 0.12);
   }
 
   .game-hint {

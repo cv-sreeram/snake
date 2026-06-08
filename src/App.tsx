@@ -21,6 +21,7 @@ export default function App() {
   } = useSnakeGame();
 
   const [isStatsPanelOpen, setIsStatsPanelOpen] = useState(false);
+  const [isPerfPanelOpen, setIsPerfPanelOpen] = useState(false);
 
   const handleBoardTap = useCallback(() => {
     if (gameState.status === 'running') {
@@ -44,6 +45,20 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const className = 'mobile-perf-open';
+
+    if (isPerfPanelOpen) {
+      document.body.classList.add(className);
+    } else {
+      document.body.classList.remove(className);
+    }
+
+    return () => {
+      document.body.classList.remove(className);
+    };
+  }, [isPerfPanelOpen]);
+
   return (
     <main className="app">
       <section className="hero">
@@ -66,6 +81,17 @@ export default function App() {
             onDirectionChange={changeDirection}
           />
 
+          <button
+            type="button"
+            className="mobile-perf-toggle"
+            aria-expanded={isPerfPanelOpen}
+            aria-controls="mobile-perf-panel"
+            aria-label="Open performance settings"
+            onClick={() => setIsPerfPanelOpen((prev) => !prev)}
+          >
+            <span className="mobile-perf-toggle__icon" />
+          </button>
+
           <p className="game-hint">
             <span className="game-hint__desktop">
               <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move • <strong>P</strong> for stats
@@ -86,6 +112,32 @@ export default function App() {
           />
         </div>
       </section>
+
+      {isPerfPanelOpen && (
+        <div className="mobile-perf-sheet" role="dialog" aria-modal="true" id="mobile-perf-panel">
+          <div
+            className="mobile-perf-sheet__backdrop"
+            onClick={() => setIsPerfPanelOpen(false)}
+          />
+          <div className="mobile-perf-sheet__content">
+            <button
+              type="button"
+              className="mobile-perf-sheet__close"
+              onClick={() => setIsPerfPanelOpen(false)}
+              aria-label="Close performance settings"
+            >
+              ×
+            </button>
+            <PerformancePanel
+              settings={performanceSettings}
+              onToggleTopLeftMovement={toggleTopLeftMovement}
+              onToggleLayoutThrashing={toggleLayoutThrashing}
+              onToggleScheduler={toggleScheduler}
+              onToggleMemo={toggleMemo}
+            />
+          </div>
+        </div>
+      )}
 
       <DetailedStatsPanel
         metrics={metrics}
