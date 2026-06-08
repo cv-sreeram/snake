@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, type CSSProperties, type PointerEvent } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { BOARD_SIZE, CELL_SIZE } from '../game/constants';
 import type { Direction, GameState, PerformanceSettings, Point } from '../game/types';
 import type { PerformanceMetrics } from '../hooks/usePerformanceMetrics';
@@ -16,10 +16,11 @@ type GameBoardProps = {
 
 function getMovementStyle(
   point: Point,
-  useTopLeftMovement: boolean
+  useTopLeftMovement: boolean,
+  cellSize: number
 ): CSSProperties {
-  const x = point.col * CELL_SIZE;
-  const y = point.row * CELL_SIZE;
+  const x = point.col * cellSize;
+  const y = point.row * cellSize;
 
   if (useTopLeftMovement) {
     return {
@@ -35,6 +36,7 @@ function getMovementStyle(
 
 export function GameBoard({ gameState, performanceSettings, metrics, recordLayoutCost, onBoardTap, onDirectionChange }: GameBoardProps) {
   const boardRef = useRef<HTMLDivElement | null>(null);
+  const [cellSize, setCellSize] = useState<number>(CELL_SIZE);
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const pointerIdRef = useRef<number | null>(null);
 
@@ -53,6 +55,26 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
   const CellComponent = performanceSettings.disableMemo
     ? BoardCell
     : MemoBoardCell;
+
+  useLayoutEffect(() => {
+    const board = boardRef.current;
+
+    if (!board) {
+      return;
+    }
+
+    const updateCellSize = () => {
+      const width = board.clientWidth;
+      setCellSize(width / BOARD_SIZE);
+    };
+
+    updateCellSize();
+
+    const resizeObserver = new ResizeObserver(updateCellSize);
+    resizeObserver.observe(board);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     if (!performanceSettings.forceLayoutThrashing) {
@@ -149,7 +171,7 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
           style={
             {
               '--board-size': `${boardPixelSize}px`,
-              '--cell-size': `${CELL_SIZE}px`,
+              '--cell-size': `${cellSize}px`,
             } as CSSProperties
           }
           onPointerDown={handlePointerDown}
@@ -178,7 +200,8 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
             ].join(' ')}
             style={getMovementStyle(
               gameState.food,
-              performanceSettings.useTopLeftMovement
+              performanceSettings.useTopLeftMovement,
+              cellSize
             )}
             aria-label="food"
           />
@@ -198,7 +221,8 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
                 ].join(' ')}
                 style={getMovementStyle(
                   part,
-                  performanceSettings.useTopLeftMovement
+                  performanceSettings.useTopLeftMovement,
+                  cellSize
                 )}
                 aria-label={isHead ? 'snake head' : 'snake body'}
               />
