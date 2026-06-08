@@ -67,7 +67,12 @@ export default function App() {
           />
 
           <p className="game-hint">
-            Tap the board to play/pause/restart • swipe to move • <strong>P</strong> for stats
+            <span className="game-hint__desktop">
+              <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move • <strong>P</strong> for stats
+            </span>
+            <span className="game-hint__mobile">
+              Tap the board to play/pause or restart on game over • swipe to move the snake
+            </span>
           </p>
         </div>
 

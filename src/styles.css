@@ -97,6 +97,14 @@ h1 {
   display: block;
 }
 
+.game-hint__mobile {
+  display: none;
+}
+
+.game-hint__desktop {
+  display: inline;
+}
+
 .mobile-controls {
   display: none;
   width: 100%;
@@ -477,7 +485,15 @@ h1 {
   }
 
   .game-hint {
+    display: block;
+  }
+
+  .game-hint__desktop {
     display: none;
+  }
+
+  .game-hint__mobile {
+    display: inline;
   }
 
   .mobile-controls {
@@ -570,5 +586,11 @@ h1 {
     padding: 0.6rem 0.9rem;
     font-size: 0.9rem;
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 450px) {
+  .board {
+    width: 100% !important;
   }
 }
