@@ -1,6 +1,6 @@
-import { useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useLayoutEffect, useMemo, useRef, type CSSProperties, type PointerEvent } from 'react';
 import { BOARD_SIZE, CELL_SIZE } from '../game/constants';
-import type { GameState, PerformanceSettings, Point } from '../game/types';
+import type { Direction, GameState, PerformanceSettings, Point } from '../game/types';
 import type { PerformanceMetrics } from '../hooks/usePerformanceMetrics';
 import { BoardCell, MemoBoardCell } from './BoardCell';
 import { PerformanceIndicator } from './PerformanceIndicator';
@@ -10,6 +10,8 @@ type GameBoardProps = {
   performanceSettings: PerformanceSettings;
   metrics: PerformanceMetrics;
   recordLayoutCost?: (cost: number) => void;
+  onBoardTap: () => void;
+  onDirectionChange: (direction: Direction) => void;
 };
 
 function getMovementStyle(
@@ -31,8 +33,10 @@ function getMovementStyle(
   };
 }
 
-export function GameBoard({ gameState, performanceSettings, metrics, recordLayoutCost }: GameBoardProps) {
+export function GameBoard({ gameState, performanceSettings, metrics, recordLayoutCost, onBoardTap, onDirectionChange }: GameBoardProps) {
   const boardRef = useRef<HTMLDivElement | null>(null);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const pointerIdRef = useRef<number | null>(null);
 
   const boardCells = useMemo(() => {
     const cells = [];
@@ -79,6 +83,51 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
 
   const boardPixelSize = BOARD_SIZE * CELL_SIZE;
 
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointerIdRef.current = event.pointerId;
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerId !== pointerIdRef.current || !pointerStartRef.current) {
+      return;
+    }
+
+    const { x: startX, y: startY } = pointerStartRef.current;
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    const threshold = 30;
+
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    pointerIdRef.current = null;
+    pointerStartRef.current = null;
+
+    if (Math.abs(deltaX) >= threshold || Math.abs(deltaY) >= threshold) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        onDirectionChange(deltaX > 0 ? 'RIGHT' : 'LEFT');
+      } else {
+        onDirectionChange(deltaY > 0 ? 'DOWN' : 'UP');
+      }
+      return;
+    }
+
+    onBoardTap();
+  };
+
+  const handlePointerCancel = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerId !== pointerIdRef.current) {
+      return;
+    }
+
+    pointerIdRef.current = null;
+    pointerStartRef.current = null;
+  };
+
   return (
     <section className="device" aria-label="Classic Nokia Snake game">
       <div className="device__speaker" />
@@ -103,6 +152,9 @@ export function GameBoard({ gameState, performanceSettings, metrics, recordLayou
               '--cell-size': `${CELL_SIZE}px`,
             } as CSSProperties
           }
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
         >
           <div className="board-grid" aria-hidden="true">
             {boardCells.map((cell) => (

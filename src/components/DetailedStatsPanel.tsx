@@ -88,7 +88,7 @@ export function DetailedStatsPanel({
   const frameTimeColor = getValueColor(metrics.avgFrameTime, 16.7, 25);
 
   return (
-    <div style={panelStyle}>
+    <div className="detailed-stats-panel" style={panelStyle}>
       <div style={headerStyle}>
         <h3 style={{ margin: '0', fontSize: '14px', fontWeight: 'bold' }}>
           Performance Stats

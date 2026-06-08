@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Controls } from './components/Controls';
+import { useCallback, useEffect, useState } from 'react';
 import { GameBoard } from './components/GameBoard';
 import { PerformancePanel } from './components/PerformancePanel';
 import { DetailedStatsPanel } from './components/DetailedStatsPanel';
@@ -22,6 +21,14 @@ export default function App() {
   } = useSnakeGame();
 
   const [isStatsPanelOpen, setIsStatsPanelOpen] = useState(false);
+
+  const handleBoardTap = useCallback(() => {
+    if (gameState.status === 'running') {
+      pauseGame();
+    } else {
+      startGame();
+    }
+  }, [gameState.status, pauseGame, startGame]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -55,20 +62,13 @@ export default function App() {
             performanceSettings={performanceSettings}
             metrics={metrics}
             recordLayoutCost={recordLayoutCost}
+            onBoardTap={handleBoardTap}
+            onDirectionChange={changeDirection}
           />
 
           <p className="game-hint">
-            <strong>Space</strong> to play/pause • <strong>Arrows</strong> to move • <strong>P</strong> for stats
+            Tap the board to play/pause/restart • swipe to move • <strong>P</strong> for stats
           </p>
-
-          <div className="mobile-controls">
-            <Controls
-              onStart={startGame}
-              onPause={pauseGame}
-              onReset={resetGame}
-              onDirectionChange={changeDirection}
-            />
-          </div>
         </div>
 
         <div className="right-panel">
