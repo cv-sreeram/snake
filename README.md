@@ -2,7 +2,7 @@
 
 A classic Nokia-style Snake game built with React, Vite, and TypeScript.
 
-The app includes interactive performance toggles that intentionally degrade rendering performance to demonstrate frontend performance concepts.
+The app includes interactive performance toggles that intentionally degrade rendering performance to demonstrate frontend performance concepts. Its main intention is to project the impact of various performance decisions on overall app performance.
  
 ## Performance concepts demonstrated
 

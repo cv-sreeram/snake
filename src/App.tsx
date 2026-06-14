@@ -68,6 +68,10 @@ export default function App() {
           A classic Nokia-style Snake game with performance toggles for React
           and browser rendering demos.
         </p>
+        <p className="hero__highlight">
+          The main intention of the app is to project the impact of various
+          performance decisions on overall app performance.
+        </p>
       </section>
 
       <section className="layout">
